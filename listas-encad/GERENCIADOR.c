@@ -85,3 +85,42 @@ void inserirPosicao(NoSimples **head, int valor, int posicao) {
     novo->prox = temp->prox;
     temp->prox = novo;
 }
+int buscarValor(NoSimples *head, int valor) {
+
+    int posicao = 0;
+
+    while (head != NULL) {
+
+        if (head->valor == valor) {
+            return posicao;
+        }
+
+        head = head->prox;
+        posicao++;
+    }
+
+    return -1;
+}
+
+/* =========================================================
+   PARTE 3 - INVERTER LISTA
+========================================================= */
+
+void inverterLista(NoSimples **head) {
+
+    NoSimples *anterior = NULL;
+    NoSimples *atual = *head;
+    NoSimples *proximo = NULL;
+
+    while (atual != NULL) {
+
+        proximo = atual->prox;
+
+        atual->prox = anterior;
+
+        anterior = atual;
+        atual = proximo;
+    }
+
+    *head = anterior;
+}
