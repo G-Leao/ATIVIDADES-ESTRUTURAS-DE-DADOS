@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+/* =========================================================
+   PARTE 1 A 4 - LISTA ENCADEADA SIMPLES
+========================================================= */
 
 typedef struct NoSimples {
     int valor;
@@ -51,6 +53,9 @@ void exibirListaSimples(NoSimples *head) {
     printf("NULL\n");
 }
 
+/* =========================================================
+   PARTE 1 - INSERIR EM POSICAO ESPECIFICA
+========================================================= */
 
 void inserirPosicao(NoSimples **head, int valor, int posicao) {
 
@@ -85,6 +90,11 @@ void inserirPosicao(NoSimples **head, int valor, int posicao) {
     novo->prox = temp->prox;
     temp->prox = novo;
 }
+
+/* =========================================================
+   PARTE 2 - BUSCAR VALOR
+========================================================= */
+
 int buscarValor(NoSimples *head, int valor) {
 
     int posicao = 0;
@@ -125,7 +135,9 @@ void inverterLista(NoSimples **head) {
     *head = anterior;
 }
 
-
+/* =========================================================
+   PARTE 4 - DIVIDIR LISTA
+========================================================= */
 
 void dividirLista(NoSimples *head, NoSimples **lista1, NoSimples **lista2) {
 
@@ -161,6 +173,9 @@ void liberarListaSimples(NoSimples *head) {
     }
 }
 
+/* =========================================================
+   PARTE 5 - PLAYLIST CIRCULAR DUPLAMENTE ENCADEADA
+========================================================= */
 
 typedef struct No {
     char musica[100];
