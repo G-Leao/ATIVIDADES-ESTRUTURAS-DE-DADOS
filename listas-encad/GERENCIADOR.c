@@ -124,3 +124,37 @@ void inverterLista(NoSimples **head) {
 
     *head = anterior;
 }
+
+void dividirLista(NoSimples *head, NoSimples **lista1, NoSimples **lista2) {
+
+    if (head == NULL) {
+        *lista1 = NULL;
+        *lista2 = NULL;
+        return;
+    }
+
+    NoSimples *lento = head;
+    NoSimples *rapido = head->prox;
+
+    while (rapido != NULL && rapido->prox != NULL) {
+        lento = lento->prox;
+        rapido = rapido->prox->prox;
+    }
+
+    *lista1 = head;
+    *lista2 = lento->prox;
+
+    lento->prox = NULL;
+}
+
+/* Liberar lista simples */
+void liberarListaSimples(NoSimples *head) {
+
+    NoSimples *temp;
+
+    while (head != NULL) {
+        temp = head;
+        head = head->prox;
+        free(temp);
+    }
+}
