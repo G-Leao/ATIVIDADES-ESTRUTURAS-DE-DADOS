@@ -1,22 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
+void inserirPosicao(NoSimples **head, int valor, int posicao) {
 
-typedef struct NoSimples {
-    int valor;
-    struct NoSimples *prox;
-} NoSimples;
-
-/* Criar nó */
-NoSimples* criarNo(int valor) {
-    NoSimples *novo = (NoSimples*) malloc(sizeof(NoSimples));
-
-    if (novo == NULL) {
-        printf("Erro de alocacao!\n");
-        exit(1);
+    if (posicao < 0) {
+        printf("Posicao invalida!\n");
+        return;
     }
 
-    novo->valor = valor;
-    novo->prox = NULL;
+    NoSimples *novo = criarNo(valor);
 
-    return novo;
+    /* Inserção no início */
+    if (posicao == 0) {
+        novo->prox = *head;
+        *head = novo;
+        return;
+    }
+
+    NoSimples *temp = *head;
+    int i = 0;
+
+    while (temp != NULL && i < posicao - 1) {
+        temp = temp->prox;
+        i++;
+    }
+
+    if (temp == NULL) {
+        printf("Posicao invalida!\n");
+        free(novo);
+        return;
+    }
+
+    novo->prox = temp->prox;
+    temp->prox = novo;
 }
