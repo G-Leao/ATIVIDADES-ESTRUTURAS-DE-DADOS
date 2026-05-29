@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* =========================================================
-   PARTE 1 A 4 - LISTA ENCADEADA SIMPLES
-========================================================= */
+
 
 typedef struct NoSimples {
     int valor;
