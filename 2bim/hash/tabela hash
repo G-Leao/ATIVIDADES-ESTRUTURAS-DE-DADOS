@@ -1,0 +1,270 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define TAMANHO_TABELA 10
+
+typedef struct No {
+    char palavra[50];
+    char definicao[200];
+    struct No *prox;
+} No;
+
+typedef struct {
+    No *tabela[TAMANHO_TABELA];
+    int elementos;
+    int colisoes;
+} Hash;
+
+// Função Hash
+int funcaoHash(char palavra[]) {
+    int soma = 0;
+
+    for (int i = 0; palavra[i] != '\0'; i++) {
+        soma += palavra[i];
+    }
+
+    return soma % TAMANHO_TABELA;
+}
+
+// Inicializar tabela
+void inicializar(Hash *h) {
+    for (int i = 0; i < TAMANHO_TABELA; i++) {
+        h->tabela[i] = NULL;
+    }
+
+    h->elementos = 0;
+    h->colisoes = 0;
+}
+
+// Inserir
+void inserir(Hash *h, char palavra[], char definicao[]) {
+
+    int indice = funcaoHash(palavra);
+
+    No *novo = (No *) malloc(sizeof(No));
+
+    strcpy(novo->palavra, palavra);
+    strcpy(novo->definicao, definicao);
+
+    novo->prox = NULL;
+
+    if (h->tabela[indice] != NULL) {
+        h->colisoes++;
+    }
+
+    novo->prox = h->tabela[indice];
+    h->tabela[indice] = novo;
+
+    h->elementos++;
+
+    printf("Palavra inserida com sucesso!\n");
+}
+
+// Buscar
+void buscar(Hash *h, char palavra[]) {
+
+    int indice = funcaoHash(palavra);
+
+    No *atual = h->tabela[indice];
+
+    while (atual != NULL) {
+
+        if (strcmp(atual->palavra, palavra) == 0) {
+
+            printf("\nPalavra encontrada!\n");
+            printf("Palavra: %s\n", atual->palavra);
+            printf("Definicao: %s\n", atual->definicao);
+            return;
+        }
+
+        atual = atual->prox;
+    }
+
+    printf("Palavra nao encontrada.\n");
+}
+
+// Remover
+void removerPalavra(Hash *h, char palavra[]) {
+
+    int indice = funcaoHash(palavra);
+
+    No *atual = h->tabela[indice];
+    No *anterior = NULL;
+
+    while (atual != NULL) {
+
+        if (strcmp(atual->palavra, palavra) == 0) {
+
+            if (anterior == NULL) {
+                h->tabela[indice] = atual->prox;
+            } else {
+                anterior->prox = atual->prox;
+            }
+
+            free(atual);
+            h->elementos--;
+
+            printf("Palavra removida!\n");
+            return;
+        }
+
+        anterior = atual;
+        atual = atual->prox;
+    }
+
+    printf("Palavra nao encontrada.\n");
+}
+
+// Exibir tabela
+void exibirTabela(Hash *h) {
+
+    printf("\n===== TABELA HASH =====\n");
+
+    for (int i = 0; i < TAMANHO_TABELA; i++) {
+
+        printf("[%d] -> ", i);
+
+        No *atual = h->tabela[i];
+
+        while (atual != NULL) {
+
+            printf("(%s) -> ", atual->palavra);
+            atual = atual->prox;
+        }
+
+        printf("NULL\n");
+    }
+}
+
+// Estatísticas
+void exibirEstatisticas(Hash *h) {
+
+    int maiorLista = 0;
+
+    for (int i = 0; i < TAMANHO_TABELA; i++) {
+
+        int tamanhoLista = 0;
+
+        No *atual = h->tabela[i];
+
+        while (atual != NULL) {
+            tamanhoLista++;
+            atual = atual->prox;
+        }
+
+        if (tamanhoLista > maiorLista) {
+            maiorLista = tamanhoLista;
+        }
+    }
+
+    float fatorCarga = (float) h->elementos / TAMANHO_TABELA;
+
+    printf("\n===== ESTATISTICAS =====\n");
+    printf("Quantidade de elementos: %d\n", h->elementos);
+    printf("Quantidade de colisoes: %d\n", h->colisoes);
+    printf("Fator de carga: %.2f\n", fatorCarga);
+    printf("Maior lista encadeada: %d\n", maiorLista);
+}
+
+// Liberar memória
+void liberarMemoria(Hash *h) {
+
+    for (int i = 0; i < TAMANHO_TABELA; i++) {
+
+        No *atual = h->tabela[i];
+
+        while (atual != NULL) {
+
+            No *temp = atual;
+            atual = atual->prox;
+
+            free(temp);
+        }
+    }
+}
+
+// Programa principal
+int main() {
+
+    Hash dicionario;
+
+    inicializar(&dicionario);
+
+    int opcao;
+
+    char palavra[50];
+    char definicao[200];
+
+    do {
+
+        printf("\n===== DICIONARIO HASH =====\n");
+        printf("1 - Inserir palavra\n");
+        printf("2 - Buscar palavra\n");
+        printf("3 - Remover palavra\n");
+        printf("4 - Exibir tabela hash\n");
+        printf("5 - Exibir estatisticas\n");
+        printf("0 - Sair\n");
+        printf("Escolha: ");
+        scanf("%d", &opcao);
+        getchar();
+
+        switch (opcao) {
+
+            case 1:
+
+                printf("Palavra: ");
+                fgets(palavra, sizeof(palavra), stdin);
+                palavra[strcspn(palavra, "\n")] = '\0';
+
+                printf("Definicao: ");
+                fgets(definicao, sizeof(definicao), stdin);
+                definicao[strcspn(definicao, "\n")] = '\0';
+
+                inserir(&dicionario, palavra, definicao);
+                break;
+
+            case 2:
+
+                printf("Digite a palavra: ");
+                fgets(palavra, sizeof(palavra), stdin);
+                palavra[strcspn(palavra, "\n")] = '\0';
+
+                buscar(&dicionario, palavra);
+                break;
+
+            case 3:
+
+                printf("Digite a palavra: ");
+                fgets(palavra, sizeof(palavra), stdin);
+                palavra[strcspn(palavra, "\n")] = '\0';
+
+                removerPalavra(&dicionario, palavra);
+                break;
+
+            case 4:
+
+                exibirTabela(&dicionario);
+                break;
+
+            case 5:
+
+                exibirEstatisticas(&dicionario);
+                break;
+
+            case 0:
+
+                printf("Encerrando programa...\n");
+                break;
+
+            default:
+
+                printf("Opcao invalida!\n");
+        }
+
+    } while (opcao != 0);
+
+    liberarMemoria(&dicionario);
+
+    return 0;
+}
