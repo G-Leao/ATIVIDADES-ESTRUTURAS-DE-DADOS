@@ -1,4 +1,4 @@
-Mano, essa atividade praticamente pede um mini-artigo. Vou te entregar um conteúdo que você pode colocar diretamente no `trabalho-arvores.md`.
+
 
 # Estruturas Avançadas de Árvores
 
